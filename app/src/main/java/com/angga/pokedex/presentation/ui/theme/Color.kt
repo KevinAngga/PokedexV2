@@ -1,4 +1,4 @@
-package com.angga.pokedex.ui.theme
+package com.angga.pokedex.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

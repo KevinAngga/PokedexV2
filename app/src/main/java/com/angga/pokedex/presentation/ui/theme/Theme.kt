@@ -1,4 +1,4 @@
-package com.angga.pokedex.ui.theme
+package com.angga.pokedex.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
