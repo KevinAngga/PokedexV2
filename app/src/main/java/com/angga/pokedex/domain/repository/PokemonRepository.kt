@@ -1,9 +1,10 @@
 package com.angga.pokedex.domain.repository
 
+import androidx.paging.PagingData
 import com.angga.pokedex.domain.model.Pokemon
-import com.angga.pokedex.domain.utils.DataError
-import com.angga.pokedex.domain.utils.Result
+import kotlinx.coroutines.flow.Flow
+
 
 interface PokemonRepository {
-    suspend fun getPokemonList() : Result<List<Pokemon>, DataError.Network>
+    suspend fun getPokemonList() : Flow<PagingData<Pokemon>>
 }

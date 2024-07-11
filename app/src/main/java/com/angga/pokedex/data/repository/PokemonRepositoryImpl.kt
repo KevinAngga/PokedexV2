@@ -1,15 +1,36 @@
 package com.angga.pokedex.data.repository
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.angga.pokedex.data.local.PokemonDatabase
+import com.angga.pokedex.data.pagination.PokemonRemoteMediator
+import com.angga.pokedex.data.remote.dto.toPokemon
 import com.angga.pokedex.domain.data_source.RemoteDataSource
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.domain.repository.PokemonRepository
-import com.angga.pokedex.domain.utils.DataError
-import com.angga.pokedex.domain.utils.Result
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class PokemonRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val pokemonDatabase: PokemonDatabase
 ): PokemonRepository {
-    override suspend fun getPokemonList(): Result<List<Pokemon>, DataError.Network> {
-        return remoteDataSource.getPokemon()
+    @OptIn(ExperimentalPagingApi::class)
+    override suspend fun getPokemonList(): Flow<PagingData<Pokemon>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            remoteMediator = PokemonRemoteMediator(
+                remoteDataSource = remoteDataSource,
+                pokemonDatabase = pokemonDatabase
+            ),
+            pagingSourceFactory = { pokemonDatabase.pokemonDao.getAllPokemon() }
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toPokemon()
+            }
+        }
     }
 }
