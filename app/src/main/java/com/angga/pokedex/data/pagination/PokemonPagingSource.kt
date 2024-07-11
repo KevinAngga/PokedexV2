@@ -32,18 +32,18 @@ class PokemonPagingSource(
 
             val pokemonResponse = remoteDataSource.getPokemon(limit = 10,
                 offset = page.times(10))
-            pokemonResponse.map {
-                it.forEach { pokemon ->
-                    coroutineScope {
-                        async {
-                            val pokemon = remoteDataSource.getPokemonDetail(pokemon.name)
-                            pokemon.map { pokemonWithDetail ->
-                                pokemonList.add(pokemonWithDetail)
-                            }
-                        }.await()
-                    }
-                }
-            }
+//            pokemonResponse.map {
+//                it.forEach { pokemon ->
+//                    coroutineScope {
+//                        async {
+//                            val pokemon = remoteDataSource.getPokemonDetail(pokemon.name)
+//                            pokemon.map { pokemonWithDetail ->
+//                                pokemonList.add(pokemonWithDetail)
+//                            }
+//                        }.await()
+//                    }
+//                }
+//            }
 
             LoadResult.Page(
                 data = pokemonList,

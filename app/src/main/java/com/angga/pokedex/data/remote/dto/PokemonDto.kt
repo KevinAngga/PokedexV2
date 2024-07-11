@@ -7,4 +7,7 @@ data class PokemonDto(
     val id : Int,
     val name: String,
     val height: Int,
+    val weight: Int,
+    val abilities : List<PokemonAbilityDto>,
+    val types : List<TypeDto>
 )

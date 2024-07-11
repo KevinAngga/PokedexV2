@@ -8,7 +8,7 @@ import androidx.room.withTransaction
 import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.local.entity.PokemonEntity
 import com.angga.pokedex.data.local.entity.PokemonRemoteKeysEntity
-import com.angga.pokedex.data.remote.dto.toPokemonEntity
+import com.angga.pokedex.data.mappers.toPokemonEntity
 import com.angga.pokedex.domain.data_source.RemoteDataSource
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.domain.utils.map
@@ -51,7 +51,7 @@ class PokemonRemoteMediator(
             }
 
             var endOfPaginationReached = false
-            val result = mutableListOf<Pokemon>()
+            val result = mutableListOf<PokemonEntity>()
 
             val response = remoteDataSource.getPokemon(
                     limit = 10,
@@ -59,14 +59,14 @@ class PokemonRemoteMediator(
                 )
 
             response.map { pokemonList ->
-//                endOfPaginationReached = pokemonList.isEmpty()
+                endOfPaginationReached = pokemonList.isEmpty()
                 if (pokemonList.isNotEmpty()) {
                     pokemonList.forEach { pokemon ->
                         withContext(Dispatchers.IO) {
                             async {
                                 val withDetail = remoteDataSource.getPokemonDetail(pokemon.name)
                                 withDetail.map { pokemonWithDetail ->
-                                    result.add(pokemonWithDetail)
+                                    result.add(pokemonWithDetail.toPokemonEntity())
                                 }
                             }
                         }
@@ -75,7 +75,7 @@ class PokemonRemoteMediator(
             }
 
             val prePage = if (currentPage == 0) null else currentPage - 1
-            val nextPage = if (result.size == 1302) null else currentPage + 1
+            val nextPage = if (endOfPaginationReached) null else currentPage + 1
 
             pokemonDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -92,11 +92,7 @@ class PokemonRemoteMediator(
                 }
 
                 pokemonDatabase.pokemonRemoteKeysDao.addRemoteKeys(keys)
-                pokemonDatabase.pokemonDao.addAllPokemon(
-                    result.map {
-                        it.toPokemonEntity()
-                    }
-                )
+                pokemonDatabase.pokemonDao.addAllPokemon(result)
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)

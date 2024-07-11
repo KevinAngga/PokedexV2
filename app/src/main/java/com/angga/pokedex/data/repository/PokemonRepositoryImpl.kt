@@ -6,8 +6,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.angga.pokedex.data.local.PokemonDatabase
+import com.angga.pokedex.data.mappers.toPokemon
 import com.angga.pokedex.data.pagination.PokemonRemoteMediator
-import com.angga.pokedex.data.remote.dto.toPokemon
 import com.angga.pokedex.domain.data_source.RemoteDataSource
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.domain.repository.PokemonRepository
