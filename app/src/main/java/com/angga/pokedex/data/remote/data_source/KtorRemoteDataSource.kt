@@ -23,7 +23,7 @@ class KtorRemoteDataSource(
     ): Result<List<Pokemon>, DataError.Network> {
       return httpClient.get<PokemonListResponseDto>(
           route = POKEMON,
-          queryParameters = mapOf("limit" to limit, "offset" to offset),
+          queryParameters = mapOf(LIMIT to limit, OFFSET to offset),
       ).map {
          it.results.map {
              it.toPokemon()
