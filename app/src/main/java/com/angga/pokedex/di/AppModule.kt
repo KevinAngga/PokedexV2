@@ -3,10 +3,8 @@ package com.angga.pokedex.di
 import androidx.room.Room
 import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.remote.HttpClientFactory
-import com.angga.pokedex.data.remote.data_source.KtorRemoteDataSource
 import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
 import com.angga.pokedex.data.repository.PokemonRepositoryImpl
-import com.angga.pokedex.domain.data_source.RemoteDataSource
 import com.angga.pokedex.domain.repository.PokemonRepository
 import com.angga.pokedex.presentation.PokemonViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -29,7 +27,6 @@ val appModule = module {
     }
 
     singleOf(::PokemonRepositoryImpl).bind<PokemonRepository>()
-    singleOf(::KtorRemoteDataSource).bind<RemoteDataSource>()
     viewModelOf(::PokemonViewModel)
     single { get<PokemonDatabase>().pokemonDao }
     single { get<PokemonDatabase>().pokemonRemoteKeysDao }

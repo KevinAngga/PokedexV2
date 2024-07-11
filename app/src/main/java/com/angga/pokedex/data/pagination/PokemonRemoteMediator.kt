@@ -8,10 +8,15 @@ import androidx.room.withTransaction
 import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.local.entity.PokemonEntity
 import com.angga.pokedex.data.local.entity.PokemonRemoteKeysEntity
+import com.angga.pokedex.data.remote.dto.PokemonDto
+import com.angga.pokedex.data.remote.dto.PokemonListResponseDto
 import com.angga.pokedex.data.remote.dto.toPokemonEntity
-import com.angga.pokedex.domain.data_source.RemoteDataSource
-import com.angga.pokedex.domain.model.Pokemon
+import com.angga.pokedex.data.remote.utils.LIMIT
+import com.angga.pokedex.data.remote.utils.OFFSET
+import com.angga.pokedex.data.remote.utils.POKEMON
+import com.angga.pokedex.data.remote.utils.get
 import com.angga.pokedex.domain.utils.map
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -20,7 +25,7 @@ import retrofit2.HttpException
 @OptIn(ExperimentalPagingApi::class)
 class PokemonRemoteMediator(
     private val pokemonDatabase: PokemonDatabase,
-    private val remoteDataSource: RemoteDataSource,
+    private val httpClient: HttpClient,
 ) : RemoteMediator<Int, PokemonEntity>() {
     override suspend fun load(
         loadType: LoadType,
@@ -51,22 +56,24 @@ class PokemonRemoteMediator(
             }
 
             var endOfPaginationReached = false
-            val result = mutableListOf<Pokemon>()
+            val result = mutableListOf<PokemonEntity>()
 
-            val response = remoteDataSource.getPokemon(
-                    limit = 10,
-                    offset = currentPage.times(10)
-                )
+            val response = httpClient.get<PokemonListResponseDto>(
+                route = POKEMON,
+                queryParameters = mapOf(LIMIT to 10, OFFSET to currentPage.times(10)),
+            ).map {
+                it.results
+            }
 
             response.map { pokemonList ->
-//                endOfPaginationReached = pokemonList.isEmpty()
+                endOfPaginationReached = pokemonList.isEmpty()
                 if (pokemonList.isNotEmpty()) {
                     pokemonList.forEach { pokemon ->
                         withContext(Dispatchers.IO) {
                             async {
-                                val withDetail = remoteDataSource.getPokemonDetail(pokemon.name)
+                                val withDetail = httpClient.get<PokemonDto>(route = "$POKEMON/${pokemon.name}")
                                 withDetail.map { pokemonWithDetail ->
-                                    result.add(pokemonWithDetail)
+                                    result.add(pokemonWithDetail.toPokemonEntity())
                                 }
                             }
                         }
@@ -75,7 +82,7 @@ class PokemonRemoteMediator(
             }
 
             val prePage = if (currentPage == 0) null else currentPage - 1
-            val nextPage = if (result.size == 1302) null else currentPage + 1
+            val nextPage = if (endOfPaginationReached) null else currentPage + 1
 
             pokemonDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -92,11 +99,7 @@ class PokemonRemoteMediator(
                 }
 
                 pokemonDatabase.pokemonRemoteKeysDao.addRemoteKeys(keys)
-                pokemonDatabase.pokemonDao.addAllPokemon(
-                    result.map {
-                        it.toPokemonEntity()
-                    }
-                )
+                pokemonDatabase.pokemonDao.addAllPokemon(result)
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)

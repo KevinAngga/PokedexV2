@@ -8,14 +8,14 @@ import androidx.paging.map
 import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.pagination.PokemonRemoteMediator
 import com.angga.pokedex.data.remote.dto.toPokemon
-import com.angga.pokedex.domain.data_source.RemoteDataSource
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.domain.repository.PokemonRepository
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PokemonRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource,
+    private val httpClient: HttpClient,
     private val pokemonDatabase: PokemonDatabase
 ): PokemonRepository {
     @OptIn(ExperimentalPagingApi::class)
@@ -23,7 +23,7 @@ class PokemonRepositoryImpl(
         return Pager(
             config = PagingConfig(pageSize = 10),
             remoteMediator = PokemonRemoteMediator(
-                remoteDataSource = remoteDataSource,
+                httpClient = httpClient,
                 pokemonDatabase = pokemonDatabase
             ),
             pagingSourceFactory = { pokemonDatabase.pokemonDao.getAllPokemon() }
