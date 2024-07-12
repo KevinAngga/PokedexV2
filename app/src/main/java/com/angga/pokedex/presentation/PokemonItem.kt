@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -11,6 +12,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -59,10 +62,16 @@ import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.presentation.components.PokemonCircularText
 import com.angga.pokedex.presentation.components.PokemonText
 import com.angga.pokedex.presentation.ui.theme.Archive
+import com.angga.pokedex.presentation.ui.theme.NormalType
+import com.angga.pokedex.presentation.utils.formatNumberWithLeadingZeros
+import timber.log.Timber
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PokemonItem(pokemon: Pokemon) {
+fun PokemonItem(
+    pokemon: Pokemon,
+    onClick : () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +81,7 @@ fun PokemonItem(pokemon: Pokemon) {
 
         var expanded by remember { mutableStateOf(false) }
 
-        val defaultDominantColor = MaterialTheme.colorScheme.surface
+        val defaultDominantColor = NormalType
         var dominantColor by remember {
             mutableStateOf(defaultDominantColor)
         }
@@ -92,6 +101,7 @@ fun PokemonItem(pokemon: Pokemon) {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
                             expanded = true
+                            onClick()
                         }
 
                         else -> {
@@ -125,12 +135,16 @@ fun PokemonItem(pokemon: Pokemon) {
                 ) {
                     PokemonText(
                         text = pokemon.name.replaceFirstChar { it.uppercase() },
-                        fontFamily = Archive,
+
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(text = pokemon.height.toString())
+
+                    PokemonText(
+                        text = pokemon.id.toString().formatNumberWithLeadingZeros()
+                    )
+
                     Spacer(modifier = Modifier.height(6.dp))
 
                     pokemon.types[1]?.let { type2 ->
@@ -149,30 +163,35 @@ fun PokemonItem(pokemon: Pokemon) {
                         .width(LocalConfiguration.current.screenWidthDp.dp * 0.65f),
                     contentAlignment = Alignment.Center
                 ) {
-//                    AsyncImage(
-//                        model = pokemon.getImageUrl(),
-//                        contentDescription = "",
-//                        onSuccess = {
-//                            calcDominantColor(drawable = it.result.drawable) {
-//                                dominantColor = it
-//                            }
-//                        }
-//                    )
 
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = (-15).dp)
-                            .padding(end = 8.dp),
+                            .fillMaxSize(),
                         horizontalAlignment = AbsoluteAlignment.Right
                     ) {
                         Image(
                             painterResource(id = R.drawable.pokeball),
+                            modifier = Modifier
+                                .size(130.dp)
+                                .offset(y = (-15).dp)
+                                .padding(end = 8.dp),
                             contentDescription = "backImage",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(130.dp),
+                            contentScale = ContentScale.Inside,
                         )
                     }
+
+                    AsyncImage(
+                        model = pokemon.getImageUrl(),
+                        contentDescription = "",
+                        onSuccess = {
+                            calcDominantColor(drawable = it.result.drawable) {
+                                dominantColor = it
+                            }
+                        },
+                        onError = {
+                            dominantColor = NormalType
+                        }
+                    )
                 }
             }
         }
@@ -195,7 +214,8 @@ fun calcDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
 private fun PokemonItemPreview() {
     MaterialTheme {
         PokemonItem(
-            Pokemon(
+            onClick = {},
+            pokemon = Pokemon(
                 id = 1,
                 name = "bulbasaur",
                 url = "",

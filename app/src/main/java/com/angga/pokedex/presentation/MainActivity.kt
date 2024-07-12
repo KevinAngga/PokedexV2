@@ -26,6 +26,7 @@ import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.presentation.ui.theme.PokedexTheme
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     val pokemonViewModel by viewModel<PokemonViewModel>()
@@ -79,7 +80,12 @@ fun PokemonListScreen(
         ) { index ->
             val pokemon = result[index]
             if (pokemon != null) {
-                PokemonItem(pokemon = pokemon)
+                PokemonItem(
+                    pokemon = pokemon,
+                    onClick = {
+
+                    }
+                )
             }
         }
 
