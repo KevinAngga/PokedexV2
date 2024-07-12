@@ -4,16 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
-import android.widget.Toast
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,9 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,15 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
@@ -61,10 +48,8 @@ import com.angga.pokedex.R
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.presentation.components.PokemonCircularText
 import com.angga.pokedex.presentation.components.PokemonText
-import com.angga.pokedex.presentation.ui.theme.Archive
 import com.angga.pokedex.presentation.ui.theme.NormalType
 import com.angga.pokedex.presentation.utils.formatNumberWithLeadingZeros
-import timber.log.Timber
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -75,8 +60,8 @@ fun PokemonItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(135.dp)
-            .clip(RoundedCornerShape(24.dp))
+            .height(150.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
 
         var expanded by remember { mutableStateOf(false) }
@@ -88,115 +73,130 @@ fun PokemonItem(
 
         Box(
             modifier = Modifier
-                .background(dominantColor)
-                .animateContentSize()
-                .fillMaxHeight()
-                .width(
-                    if (expanded) LocalConfiguration.current.screenWidthDp.dp
-                    else LocalConfiguration.current.screenWidthDp.dp * 0.65f
-                )
-                .clip(RoundedCornerShape(24.dp))
-                .align(Alignment.CenterEnd)
-                .pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            expanded = true
-                            onClick()
-                        }
-
-                        else -> {
-                            expanded = false
-                        }
-                    }
-                    true
-                }
-        ) {
-
-        }
-
-        Box(
-            modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
+                .height(135.dp)
+
                 .clip(RoundedCornerShape(24.dp))
-                .zIndex(1f),
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    PokemonText(
-                        text = pokemon.name.replaceFirstChar { it.uppercase() },
-
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                    .background(dominantColor)
+                    .animateContentSize()
+                    .fillMaxHeight()
+                    .width(
+                        if (expanded) LocalConfiguration.current.screenWidthDp.dp
+                        else LocalConfiguration.current.screenWidthDp.dp * 0.65f
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+                    .clip(RoundedCornerShape(24.dp))
+                    .align(Alignment.CenterEnd)
+                    .pointerInteropFilter {
+                        when (it.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                expanded = true
+                                onClick()
+                            }
 
-                    PokemonText(
-                        text = pokemon.id.toString().formatNumberWithLeadingZeros()
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    pokemon.types[1]?.let { type2 ->
-                        if (type2.isEmpty()) { Spacer(modifier = Modifier.height(40.dp)) }
-                        pokemon.types[0]?.let { PokemonCircularText(text = it) }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        if (type2.isNotEmpty()) {
-                            PokemonCircularText(text = type2)
+                            else -> {
+                                expanded = false
+                            }
                         }
+                        true
                     }
+            ) {
 
-                }
+            }
 
-                Box(
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(24.dp))
+                    .zIndex(1f),
+            ) {
+                Row(
                     modifier = Modifier
-                        .width(LocalConfiguration.current.screenWidthDp.dp * 0.65f),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Column(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = AbsoluteAlignment.Right
+                            .weight(1f)
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Image(
-                            painterResource(id = R.drawable.pokeball),
-                            modifier = Modifier
-                                .size(130.dp)
-                                .offset(y = (-15).dp)
-                                .padding(end = 8.dp),
-                            contentDescription = "backImage",
-                            contentScale = ContentScale.Inside,
+                        PokemonText(
+                            text = pokemon.name.replaceFirstChar { it.uppercase() },
+
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
                         )
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        PokemonText(
+                            text = pokemon.id.toString().formatNumberWithLeadingZeros()
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        pokemon.types[1]?.let { type2 ->
+                            if (type2.isEmpty()) { Spacer(modifier = Modifier.height(40.dp)) }
+                            pokemon.types[0]?.let { PokemonCircularText(text = it) }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            if (type2.isNotEmpty()) {
+                                PokemonCircularText(text = type2)
+                            }
+                        }
+
                     }
 
-                    AsyncImage(
-                        model = pokemon.getImageUrl(),
-                        contentDescription = "",
-                        onSuccess = {
-                            calcDominantColor(drawable = it.result.drawable) {
-                                dominantColor = it
-                            }
-                        },
-                        onError = {
-                            dominantColor = NormalType
+                    Box(
+                        modifier = Modifier
+                            .width(LocalConfiguration.current.screenWidthDp.dp * 0.65f),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalAlignment = AbsoluteAlignment.Right
+                        ) {
+                            Image(
+                                painterResource(id = R.drawable.pokeball),
+                                modifier = Modifier
+                                    .size(130.dp)
+                                    .offset(y = (-15).dp)
+                                    .padding(end = 8.dp),
+                                contentDescription = "backImage",
+                                contentScale = ContentScale.Inside,
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
 
+        AsyncImage(
+            modifier = Modifier
+                .size(150.dp)
+                .offset(
+                    x = 40.dp,
+                    y = -10.dp
+                ),
+            model = pokemon.getImageUrl(),
+            contentDescription = "",
+            onSuccess = {
+                calcDominantColor(drawable = it.result.drawable) {
+                    dominantColor = it
+                }
+            },
+            onError = {
+                dominantColor = NormalType
+            },
+            contentScale = ContentScale.Fit,
+        )
     }
+
 }
 
 fun calcDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
