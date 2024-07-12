@@ -79,6 +79,12 @@ dependencies {
     //ktor
     implementation(libs.bundles.ktor)
 
+    //coil
+    implementation(libs.coil)
+
+    //pallet
+    implementation(libs.pallet)
+
     //room
     implementation(libs.room)
     annotationProcessor(libs.room.runtime)

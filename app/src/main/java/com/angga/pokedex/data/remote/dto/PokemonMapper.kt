@@ -7,7 +7,9 @@ fun PokemonDto.toPokemonEntity(): PokemonEntity {
     return PokemonEntity(
         id = id,
         name = name,
-        height = height
+        height = height,
+        type1 = types[0].type.name,
+        type2 = if (types.size > 1) types[1].type.name else "",
     )
 }
 
@@ -15,6 +17,7 @@ fun PokemonEntity.toPokemon(): Pokemon {
     return Pokemon(
         id = id,
         name = name,
-        height = height
+        height = height,
+        types = listOf(type1, type2)
     )
 }

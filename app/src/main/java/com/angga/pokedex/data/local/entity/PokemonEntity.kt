@@ -10,4 +10,6 @@ data class PokemonEntity(
     val id : Int,
     val name: String,
     val height: Int,
+    val type1: String?,
+    val type2: String?,
 )

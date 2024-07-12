@@ -75,7 +75,7 @@ class PokemonRemoteMediator(
                                 withDetail.map { pokemonWithDetail ->
                                     result.add(pokemonWithDetail.toPokemonEntity())
                                 }
-                            }
+                            }.await()
                         }
                     }
                 }

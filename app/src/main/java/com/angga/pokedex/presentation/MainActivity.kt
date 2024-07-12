@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,12 +16,15 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.presentation.ui.theme.PokedexTheme
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +41,17 @@ class MainActivity : ComponentActivity() {
                         pokemonViewModel = pokemonViewModel,
                         modifier = Modifier.fillMaxSize()
                     )
+
+//                    PokemonItem(pokemon = Pokemon(
+//                        id = 1,
+//                        name = "bulbasaur",
+//                        url = "",
+//                        height = 0,
+//                        types = listOf(
+//                            "poison",
+//                            "grass"
+//                        )
+//                    ))
                 }
             }
         }
@@ -52,7 +67,9 @@ fun PokemonListScreen(
     val loadState = result.loadState.mediator
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
