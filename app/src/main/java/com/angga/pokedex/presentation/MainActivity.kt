@@ -76,14 +76,14 @@ fun PokemonListScreen(
     ) {
         items(
             count = result.itemCount,
-            key = { index -> index }
+            key = { item -> item }
         ) { index ->
             val pokemon = result[index]
             if (pokemon != null) {
                 PokemonItem(
                     pokemon = pokemon,
                     onClick = {
-
+                        Timber.e("clicked")
                     }
                 )
             }

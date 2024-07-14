@@ -4,9 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +67,10 @@ fun PokemonItem(
     ) {
 
         var expanded by remember { mutableStateOf(false) }
+        val targetWidth = if (expanded) LocalConfiguration.current.screenWidthDp.dp
+        else LocalConfiguration.current.screenWidthDp.dp * 0.65f
+        val animatedWidth by animateDpAsState(targetValue = targetWidth, label = "")
+
 
         val defaultDominantColor = NormalType
         var dominantColor by remember {
@@ -75,33 +81,28 @@ fun PokemonItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(135.dp)
-
                 .clip(RoundedCornerShape(24.dp))
         ) {
             Box(
                 modifier = Modifier
                     .background(dominantColor)
-                    .animateContentSize()
                     .fillMaxHeight()
-                    .width(
-                        if (expanded) LocalConfiguration.current.screenWidthDp.dp
-                        else LocalConfiguration.current.screenWidthDp.dp * 0.65f
-                    )
-                    .clip(RoundedCornerShape(24.dp))
-                    .align(Alignment.CenterEnd)
                     .pointerInteropFilter {
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
                                 expanded = true
-                                onClick()
                             }
-
-                            else -> {
+                            MotionEvent.ACTION_UP,
+                            MotionEvent.ACTION_CANCEL,
+                            MotionEvent.ACTION_MOVE -> {
                                 expanded = false
                             }
                         }
                         true
                     }
+                    .width(animatedWidth)
+                    .clip(RoundedCornerShape(24.dp))
+                    .align(Alignment.CenterEnd)
             ) {
 
             }
@@ -181,8 +182,13 @@ fun PokemonItem(
                 .size(150.dp)
                 .offset(
                     x = 40.dp,
-                    y = -10.dp
-                ),
+                    y = (-10).dp
+                ).clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                  onClick()
+                },
             model = pokemon.getImageUrl(),
             contentDescription = "",
             onSuccess = {
@@ -193,7 +199,7 @@ fun PokemonItem(
             onError = {
                 dominantColor = NormalType
             },
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillHeight,
         )
     }
 
