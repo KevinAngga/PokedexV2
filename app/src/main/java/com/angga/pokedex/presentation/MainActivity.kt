@@ -1,164 +1,102 @@
 package com.angga.pokedex.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.angga.pokedex.domain.model.Pokemon
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.angga.pokedex.presentation.bottom_nav.BottomNavigation
+import com.angga.pokedex.presentation.bottom_nav.Destinations
+import com.angga.pokedex.presentation.components.MenuItem
 import com.angga.pokedex.presentation.ui.theme.PokedexTheme
-import kotlinx.coroutines.flow.flowOf
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-    val pokemonViewModel by viewModel<PokemonViewModel>()
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PokedexTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    PokemonListScreen(
-                        pokemonViewModel = pokemonViewModel,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                val navController = rememberNavController()
 
-//                    PokemonItem(pokemon = Pokemon(
-//                        id = 1,
-//                        name = "bulbasaur",
-//                        url = "",
-//                        height = 0,
-//                        types = listOf(
-//                            "poison",
-//                            "grass"
-//                        )
-//                    ))
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route ?: BottomNavigation.HOME::class.qualifiedName.orEmpty()
+
+                val isBottomAppBarVisible = rememberSaveable(navBackStackEntry) {
+                    navBackStackEntry?.destination?.route == Destinations.Home::class.qualifiedName ||
+                            navBackStackEntry?.destination?.route == Destinations.Team::class.qualifiedName
+                }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                      if (isBottomAppBarVisible) {
+                          NavigationBar(
+                              modifier = Modifier
+                                  .padding(24.dp)
+                                  .background(Color.White, CircleShape),
+                              containerColor = Color.Transparent
+                          ) {
+                              Row(
+                                  modifier = Modifier
+                                      .fillMaxWidth()
+                                      .padding(4.dp)
+                                      .clip(RoundedCornerShape(34.dp)),
+                                  verticalAlignment = Alignment.CenterVertically,
+                                  horizontalArrangement = Arrangement.SpaceEvenly
+                              ) {
+                                  BottomNavigation.entries
+                                      .forEachIndexed { index, bottomNavigation ->
+                                          val isSelected by remember(currentRoute) {
+                                              derivedStateOf {
+                                                  currentRoute == bottomNavigation.route::class.qualifiedName
+                                              }
+                                          }
+
+                                          MenuItem(
+                                              modifier = Modifier
+                                                  .weight(1f)
+                                                  .align(Alignment.CenterVertically),
+                                              label = bottomNavigation.label,
+                                              drawableRes = bottomNavigation.icon,
+                                              isSelected = isSelected,
+                                              onClick = {
+                                                  navController.navigate(bottomNavigation.route) {
+                                                      popUpTo(navController.graph.findStartDestination().id)
+                                                      launchSingleTop = true
+                                                  }
+                                              }
+                                          )
+                                      }
+                              }
+                          }
+                      }
+                    }
+                ) { _ ->
+                    NavigationRoot(navController = navController)
                 }
             }
         }
     }
 }
 
-@Composable
-fun PokemonListScreen(
-    pokemonViewModel: PokemonViewModel,
-    modifier: Modifier = Modifier
-) {
-    val result = pokemonViewModel.state.pokemonList.collectAsLazyPagingItems()
-    val loadState = result.loadState.mediator
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        items(
-            count = result.itemCount,
-            key = { item -> item }
-        ) { index ->
-            val pokemon = result[index]
-            if (pokemon != null) {
-                PokemonItem(
-                    pokemon = pokemon,
-                    onClick = {
-                        Timber.e("clicked")
-                    }
-                )
-            }
-        }
-
-        result.apply {
-            when {
-                loadState?.append is LoadState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                        )
-                    }
-                }
-
-                loadState?.refresh is LoadState.Loading -> {
-                    item {
-                        Box(
-                            modifier = Modifier.fillParentMaxSize()
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
-                }
-
-                loadState?.refresh is LoadState.Error -> {
-                    val error = loadState.refresh as LoadState.Error
-                    item {
-                        error.error.localizedMessage?.let {
-                            ErrorMessage(
-                                modifier = Modifier.fillParentMaxSize(),
-                                message = it,
-                                onClickRetry = { retry() })
-                        }
-                    }
-                }
-
-
-                loadState?.append is LoadState.Error -> {
-                    val error = loadState.append as LoadState.Error
-                    item {
-                        error.error.localizedMessage?.let {
-                            ErrorMessage(
-                                modifier = Modifier.fillParentMaxSize(),
-                                message = it,
-                                onClickRetry = { retry() })
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ErrorMessage(
-    message: String,
-    modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit,
-) {
-    Row(
-        modifier = modifier.padding(10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = message,
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.weight(1f),
-            maxLines = 2
-        )
-        OutlinedButton(onClick = onClickRetry) {
-            Text(text = "retry")
-        }
-    }
-}

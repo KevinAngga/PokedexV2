@@ -1,4 +1,4 @@
-package com.angga.pokedex.presentation
+package com.angga.pokedex.presentation.list
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable

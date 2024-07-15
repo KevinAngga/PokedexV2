@@ -1,4 +1,4 @@
-package com.angga.pokedex.presentation
+package com.angga.pokedex.presentation.list
 
 import androidx.paging.PagingData
 import com.angga.pokedex.domain.model.Pokemon

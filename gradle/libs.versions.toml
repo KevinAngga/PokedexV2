@@ -14,7 +14,7 @@ timber = "5.0.1"
 retrofit = "2.9.0"
 room = "2.6.1"
 lifecycleViewmodelCompose = "2.8.2"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.0-beta05"
 hiltCompose = "1.2.0"
 firebase = "33.1.1"
 playService = "4.4.2"
@@ -85,7 +85,7 @@ playsService = { id ="com.google.gms.google-services", version.ref = "playServic
 
 
 [bundles]
-koin = ["koin-android", "koin-android-workmanager", "koin-core"]
+koin = ["koin-android", "koin-android-workmanager", "koin-core", "koin-androidx-compose"]
 ktor = [
     "ktor-client-auth",
     "ktor-client-cio",

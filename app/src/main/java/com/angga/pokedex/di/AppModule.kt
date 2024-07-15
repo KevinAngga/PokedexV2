@@ -6,7 +6,7 @@ import com.angga.pokedex.data.remote.HttpClientFactory
 import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
 import com.angga.pokedex.data.repository.PokemonRepositoryImpl
 import com.angga.pokedex.domain.repository.PokemonRepository
-import com.angga.pokedex.presentation.PokemonViewModel
+import com.angga.pokedex.presentation.list.PokemonViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
