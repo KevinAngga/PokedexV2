@@ -1,5 +1,6 @@
 package com.angga.pokedex.presentation.bottom_nav
 
+import com.angga.pokedex.domain.model.Pokemon
 import kotlinx.serialization.Serializable
 
 sealed class Destinations {
@@ -10,7 +11,9 @@ sealed class Destinations {
     data object Team
 
     @Serializable
-    data object Detail
+    data class Detail(
+        val pokemonId: Int
+    )
 
     @Serializable
     data object BottomNavGraph

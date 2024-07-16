@@ -17,88 +17,103 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.angga.pokedex.domain.model.Pokemon
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PokemonListScreen(
     pokemonViewModel: PokemonViewModel = koinViewModel(),
     modifier: Modifier = Modifier,
-    navigateToDetailPage: () -> Unit,
+    navigateToDetailPage: (pokemonId : Int) -> Unit,
 ) {
-    val result = pokemonViewModel.state.pokemonList.collectAsLazyPagingItems()
-    val loadState = result.loadState.mediator
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    PokemonItem(
+        pokemon =  Pokemon(
+            id = 1,
+            name = "bulbasaur",
+            url = "",
+            height = 0,
+            types = listOf(
+                "poison",
+                "grass"
+            )
+        )
     ) {
-        items(
-            count = result.itemCount,
-            key = result.itemKey { it.id }
-        ) { index ->
-            val pokemon = result[index]
-            if (pokemon != null) {
-                PokemonItem(
-                    pokemon = pokemon,
-                    onClick = {
-                        navigateToDetailPage()
-                    }
-                )
-            }
-        }
-
-        result.apply {
-            when {
-                loadState?.append is LoadState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                        )
-                    }
-                }
-
-                loadState?.refresh is LoadState.Loading -> {
-                    item {
-                        Box(
-                            modifier = Modifier.fillParentMaxSize()
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
-                }
-
-                loadState?.refresh is LoadState.Error -> {
-                    val error = loadState.refresh as LoadState.Error
-                    item {
-                        error.error.localizedMessage?.let {
-                            ErrorMessage(
-                                modifier = Modifier.fillParentMaxSize(),
-                                message = it,
-                                onClickRetry = { retry() })
-                        }
-                    }
-                }
-
-
-                loadState?.append is LoadState.Error -> {
-                    val error = loadState.append as LoadState.Error
-                    item {
-                        error.error.localizedMessage?.let {
-                            ErrorMessage(
-                                modifier = Modifier.fillParentMaxSize(),
-                                message = it,
-                                onClickRetry = { retry() })
-                        }
-                    }
-                }
-            }
-        }
+        navigateToDetailPage(1)
     }
+//    val result = pokemonViewModel.state.pokemonList.collectAsLazyPagingItems()
+//    val loadState = result.loadState.mediator
+//
+//    LazyColumn(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(8.dp),
+//        verticalArrangement = Arrangement.spacedBy(16.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        items(
+//            count = result.itemCount,
+//            key = result.itemKey { it.id }
+//        ) { index ->
+//            val pokemon = result[index]
+//            if (pokemon != null) {
+//                PokemonItem(
+//                    pokemon = pokemon,
+//                    onClick = {
+//                        navigateToDetailPage(pokemon)
+//                    }
+//                )
+//            }
+//        }
+//
+//        result.apply {
+//            when {
+//                loadState?.append is LoadState.Loading -> {
+//                    item {
+//                        CircularProgressIndicator(
+//                            modifier = Modifier
+//                        )
+//                    }
+//                }
+//
+//                loadState?.refresh is LoadState.Loading -> {
+//                    item {
+//                        Box(
+//                            modifier = Modifier.fillParentMaxSize()
+//                        ) {
+//                            CircularProgressIndicator(
+//                                modifier = Modifier.align(Alignment.Center)
+//                            )
+//                        }
+//                    }
+//                }
+//
+//                loadState?.refresh is LoadState.Error -> {
+//                    val error = loadState.refresh as LoadState.Error
+//                    item {
+//                        error.error.localizedMessage?.let {
+//                            ErrorMessage(
+//                                modifier = Modifier.fillParentMaxSize(),
+//                                message = it,
+//                                onClickRetry = { retry() })
+//                        }
+//                    }
+//                }
+//
+//
+//                loadState?.append is LoadState.Error -> {
+//                    val error = loadState.append as LoadState.Error
+//                    item {
+//                        error.error.localizedMessage?.let {
+//                            ErrorMessage(
+//                                modifier = Modifier.fillParentMaxSize(),
+//                                message = it,
+//                                onClickRetry = { retry() })
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 @Composable
