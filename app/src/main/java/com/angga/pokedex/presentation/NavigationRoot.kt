@@ -1,18 +1,15 @@
 package com.angga.pokedex.presentation
 
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.angga.pokedex.presentation.bottom_nav.Destinations
-import com.angga.pokedex.presentation.detail.PokemonDetailScreen
 import com.angga.pokedex.presentation.detail.PokemonDetailScreenRoot
 import com.angga.pokedex.presentation.list.PokemonListScreen
-import com.angga.pokedex.presentation.team.PokemonTeam
+import com.angga.pokedex.presentation.team.PokemonTeamScreenRoot
 
 @Composable
 fun NavigationRoot(
@@ -59,7 +56,7 @@ private fun NavGraphBuilder.mainGraph(
         }
 
         composable<Destinations.Team> {
-            PokemonTeam()
+            PokemonTeamScreenRoot()
         }
     }
 }

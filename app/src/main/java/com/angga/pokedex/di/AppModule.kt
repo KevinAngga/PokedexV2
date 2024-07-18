@@ -5,9 +5,12 @@ import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.remote.HttpClientFactory
 import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
 import com.angga.pokedex.data.repository.PokemonRepositoryImpl
+import com.angga.pokedex.data.repository.PokemonTeamRepositoryImpl
 import com.angga.pokedex.domain.repository.PokemonRepository
+import com.angga.pokedex.domain.repository.PokemonTeamRepository
 import com.angga.pokedex.presentation.detail.PokemonDetailViewModel
 import com.angga.pokedex.presentation.list.PokemonViewModel
+import com.angga.pokedex.presentation.team.PokemonTeamsViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
@@ -28,8 +31,11 @@ val appModule = module {
     }
 
     singleOf(::PokemonRepositoryImpl).bind<PokemonRepository>()
+    singleOf(::PokemonTeamRepositoryImpl).bind<PokemonTeamRepository>()
     viewModelOf(::PokemonViewModel)
     viewModelOf(::PokemonDetailViewModel)
+    viewModelOf(::PokemonTeamsViewModel)
     single { get<PokemonDatabase>().pokemonDao }
     single { get<PokemonDatabase>().pokemonRemoteKeysDao }
+    single { get<PokemonDatabase>().pokemonTeamDao }
 }

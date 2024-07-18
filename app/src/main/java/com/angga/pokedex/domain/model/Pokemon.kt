@@ -17,11 +17,6 @@ data class Pokemon(
     val types : List<String?> = listOf(),
     val abilities : List<String?> = listOf()
 ) {
-    fun getSpriteImageUrl(): String {
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
-                "pokemon/$id.png"
-    }
-
     fun getImageUrl(): String {
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
                 "pokemon/other/official-artwork/$id.png"

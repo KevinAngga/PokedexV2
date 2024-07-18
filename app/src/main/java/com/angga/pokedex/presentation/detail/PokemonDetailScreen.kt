@@ -1,8 +1,5 @@
 package com.angga.pokedex.presentation.detail
 
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,12 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -34,10 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,13 +55,15 @@ import org.koin.androidx.compose.koinViewModel
 fun PokemonDetailScreenRoot() {
     val detailViewModel : PokemonDetailViewModel = koinViewModel()
     PokemonDetailScreen(
-        state = detailViewModel.state
+        state = detailViewModel.state,
+        onAddTeamClicked = detailViewModel::onAction
     )
 }
 
 @Composable
 fun PokemonDetailScreen(
     state: PokemonDetailState,
+    onAddTeamClicked: (PokemonDetailAction) -> Unit,
 ) {
     val defaultDominantColor = NormalType
     var dominantColor by remember {
@@ -83,7 +78,7 @@ fun PokemonDetailScreen(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
                     .clickable {
-
+                        onAddTeamClicked(PokemonDetailAction.OnAddTeamClicked)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -360,7 +355,8 @@ fun PokemonDetailScreen(
 private fun PokemonDetailScreenPreview() {
     PokedexTheme {
         PokemonDetailScreen(
-            state = PokemonDetailState()
+            state = PokemonDetailState(),
+            onAddTeamClicked = {}
         )
     }
 }

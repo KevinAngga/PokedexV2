@@ -10,9 +10,8 @@ import androidx.navigation.toRoute
 import com.angga.pokedex.domain.model.PokemonCharacteristic
 import com.angga.pokedex.domain.model.PokemonDesc
 import com.angga.pokedex.domain.repository.PokemonRepository
-import com.angga.pokedex.domain.utils.DataError
+import com.angga.pokedex.domain.repository.PokemonTeamRepository
 import com.angga.pokedex.domain.utils.Result
-import com.angga.pokedex.domain.utils.map
 import com.angga.pokedex.presentation.bottom_nav.Destinations
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -23,7 +22,8 @@ import timber.log.Timber
 
 class PokemonDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val pokemonRepository: PokemonRepository
+    private val pokemonRepository: PokemonRepository,
+    private val pokemonTeamRepository: PokemonTeamRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(PokemonDetailState())
@@ -35,6 +35,20 @@ class PokemonDetailViewModel(
     init {
         getPokemonDetail()
         getContent()
+    }
+
+    fun onAction(action: PokemonDetailAction) {
+        when(action) {
+            PokemonDetailAction.OnAddTeamClicked -> {
+                addPokemonToTeam()
+            }
+        }
+    }
+
+    private fun addPokemonToTeam() {
+        viewModelScope.launch {
+            pokemonTeamRepository.inputPokemonToTeam(state.pokemon)
+        }
     }
 
 
