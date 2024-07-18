@@ -14,7 +14,7 @@ fun PokemonDto.toPokemonEntity(): PokemonEntity {
         type1 = types[0].type.name,
         type2 = if (types.size > 1) types[1].type.name else null,
         ability1 = abilities[0].ability.name,
-        ability2 = abilities[1].ability.name,
+        ability2 = if (abilities.size > 1) abilities[1].ability.name else null,
     )
 }
 
