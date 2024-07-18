@@ -1,7 +1,9 @@
 package com.angga.pokedex.presentation.components
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,13 +18,15 @@ fun PokemonText(
     text : String,
     fontSize : TextUnit = 14.sp,
     fontFamily: FontFamily = InGlobal,
-    fontWeight: FontWeight = FontWeight.Normal
+    fontWeight: FontWeight = FontWeight.Normal,
+    color : Color = MaterialTheme.colorScheme.onBackground
 ) {
     Text(
         text = text,
         fontSize = fontSize,
         fontFamily = fontFamily,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        color = color
     )
 }
 

@@ -50,6 +50,7 @@ import com.angga.pokedex.R
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.presentation.components.PokemonCircularText
 import com.angga.pokedex.presentation.components.PokemonText
+import com.angga.pokedex.presentation.ui.theme.Archive
 import com.angga.pokedex.presentation.ui.theme.NormalType
 import com.angga.pokedex.presentation.utils.formatNumberWithLeadingZeros
 
@@ -128,7 +129,7 @@ fun PokemonItem(
                     ) {
                         PokemonText(
                             text = pokemon.name.replaceFirstChar { it.uppercase() },
-
+                            fontFamily = Archive,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -140,11 +141,11 @@ fun PokemonItem(
 
                         Spacer(modifier = Modifier.height(6.dp))
 
-                        pokemon.types[1]?.let { type2 ->
-                            if (type2.isEmpty()) { Spacer(modifier = Modifier.height(40.dp)) }
+                        pokemon.types[1].let { type2 ->
+                            if (type2.isNullOrEmpty()) { Spacer(modifier = Modifier.height(40.dp)) }
                             pokemon.types[0]?.let { PokemonCircularText(text = it) }
                             Spacer(modifier = Modifier.height(4.dp))
-                            if (type2.isNotEmpty()) {
+                            if (!type2.isNullOrEmpty()) {
                                 PokemonCircularText(text = type2)
                             }
                         }

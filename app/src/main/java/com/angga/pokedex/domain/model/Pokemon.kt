@@ -6,15 +6,17 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Immutable
-@Parcelize
-@Serializable
+//@Parcelize
+//@Serializable
 data class Pokemon(
     val id : Int = 0,
     val name: String = "",
     val url: String = "",
     val height: Int = 0,
-    val types : List<String?> = listOf()
-) : Parcelable {
+    val weight: Int = 0,
+    val types : List<String?> = listOf(),
+    val abilities : List<String?> = listOf()
+) {
     fun getSpriteImageUrl(): String {
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
                 "pokemon/$id.png"

@@ -7,3 +7,6 @@ fun String.formatNumberWithLeadingZeros(): String {
         else -> "#$this"
     }
 }
+
+fun Int.getWeightString(): String = String.format("%.1f kg", this.toFloat() / 10)
+fun Int.getHeightString(): String = String.format("%.1f m", this.toFloat() / 10)

@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.angga.pokedex.presentation.bottom_nav.Destinations
 import com.angga.pokedex.presentation.detail.PokemonDetailScreen
+import com.angga.pokedex.presentation.detail.PokemonDetailScreenRoot
 import com.angga.pokedex.presentation.list.PokemonListScreen
 import com.angga.pokedex.presentation.team.PokemonTeam
 
@@ -28,9 +28,8 @@ fun NavigationRoot(
 
 
         /** use primitive **/
-        composable<Destinations.Detail> {backStackEntry ->
-            val id = backStackEntry.toRoute<Destinations.Detail>().pokemonId
-            PokemonDetailScreen(id)
+        composable<Destinations.Detail> {
+            PokemonDetailScreenRoot()
         }
 
         /** use object **/

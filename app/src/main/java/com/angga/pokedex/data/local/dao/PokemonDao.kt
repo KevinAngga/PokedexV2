@@ -16,4 +16,7 @@ interface PokemonDao {
 
     @Query("SELECT * FROM `POKEMON_TABLE`")
     fun getAllPokemon(): PagingSource<Int, PokemonEntity>
+
+    @Query("SELECT * FROM `POKEMON_TABLE` WHERE id=:pokemonId")
+    suspend fun getPokemonById(pokemonId : Int) : PokemonEntity
 }
