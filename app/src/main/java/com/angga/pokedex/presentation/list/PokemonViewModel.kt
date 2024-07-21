@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.angga.pokedex.domain.repository.PokemonRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PokemonViewModel(
+@HiltViewModel
+class PokemonViewModel @Inject constructor(
     private val pokemonRepository: PokemonRepository
 ): ViewModel() {
 

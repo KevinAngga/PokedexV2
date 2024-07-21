@@ -38,7 +38,9 @@ import com.angga.pokedex.presentation.bottom_nav.BottomNavigation
 import com.angga.pokedex.presentation.bottom_nav.Destinations
 import com.angga.pokedex.presentation.components.MenuItem
 import com.angga.pokedex.presentation.ui.theme.PokedexTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {

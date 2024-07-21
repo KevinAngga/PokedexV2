@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.angga.pokedex.R
 import com.angga.pokedex.presentation.components.PokemonCircularText
@@ -53,7 +54,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PokemonDetailScreenRoot() {
-    val detailViewModel : PokemonDetailViewModel = koinViewModel()
+    val detailViewModel : PokemonDetailViewModel = hiltViewModel()
     PokemonDetailScreen(
         state = detailViewModel.state,
         onAddTeamClicked = detailViewModel::onAction

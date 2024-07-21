@@ -13,14 +13,17 @@ import com.angga.pokedex.domain.repository.PokemonRepository
 import com.angga.pokedex.domain.repository.PokemonTeamRepository
 import com.angga.pokedex.domain.utils.Result
 import com.angga.pokedex.presentation.bottom_nav.Destinations
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class PokemonDetailViewModel(
+@HiltViewModel
+class PokemonDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val pokemonRepository: PokemonRepository,
     private val pokemonTeamRepository: PokemonTeamRepository

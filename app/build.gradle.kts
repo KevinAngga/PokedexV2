@@ -108,6 +108,10 @@ dependencies {
     //timber
     implementation(libs.timber)
 
+    //glace
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.widget)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

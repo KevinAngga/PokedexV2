@@ -26,6 +26,7 @@ ktorClientLogging = "2.3.8"
 ktorServerCallLogging = "2.3.7"
 coil = "2.6.0"
 pallet = "1.0.0"
+glance-version = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,6 +75,8 @@ ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging", versio
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 coil = { group="io.coil-kt", name="coil-compose", version.ref="coil" }
 pallet = { group="androidx.palette", name="palette", version.ref="pallet" }
+androidx-glance = { group ="androidx.glance", name="glance", version.ref="glance-version" }
+androidx-glance-widget = { group="androidx.glance", name="glance-appwidget", version.ref="glance-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
