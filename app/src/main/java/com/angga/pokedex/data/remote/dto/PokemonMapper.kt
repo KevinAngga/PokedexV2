@@ -35,6 +35,7 @@ fun PokemonTeamEntity.toPokemonTeam(): PokemonTeam {
     return PokemonTeam(
         id = id,
         name = name,
+        localPath = localPath,
         type1 = type1,
         type2 = type2
     )
@@ -44,6 +45,7 @@ fun Pokemon.toPokemonTeamEntity(): PokemonTeamEntity {
     return PokemonTeamEntity(
         id = id,
         name = name,
+        localPath = "",
         type1 = types[0] ?: "",
         type2 = types[1] ?: ""
     )

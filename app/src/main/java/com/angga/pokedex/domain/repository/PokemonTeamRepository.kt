@@ -8,4 +8,5 @@ interface PokemonTeamRepository {
     suspend fun inputPokemonToTeam(pokemon: Pokemon)
     suspend fun deletePokemonFromTeam(pokemon: Pokemon)
     suspend fun getAllPokemonTeam() : Flow<List<PokemonTeam>>
+    suspend fun getImageFromUrlAndSaveFiles(pokemon: Pokemon) : String
 }

@@ -21,4 +21,9 @@ data class Pokemon(
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
                 "pokemon/other/official-artwork/$id.png"
     }
+
+    fun getSpriteImageUrl(): String {
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
+                "pokemon/$id.png"
+    }
 }

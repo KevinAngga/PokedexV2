@@ -73,6 +73,14 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     ksp(libs.dagger.hilt.compiler)
+    ksp(libs.androidx.hilt.work)
+
+    //workmanager
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+
+    //startup
+    implementation(libs.startup.android)
 
     //koin
     implementation(libs.bundles.koin)
