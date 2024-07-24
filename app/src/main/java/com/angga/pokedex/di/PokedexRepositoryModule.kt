@@ -6,6 +6,7 @@ import com.angga.pokedex.data.repository.PokemonRepositoryImpl
 import com.angga.pokedex.data.repository.PokemonTeamRepositoryImpl
 import com.angga.pokedex.domain.repository.PokemonRepository
 import com.angga.pokedex.domain.repository.PokemonTeamRepository
+import com.angga.pokedex.presentation.widget.PokemonWidgetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,5 +1,6 @@
 package com.angga.pokedex.presentation.detail
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,7 +14,9 @@ import com.angga.pokedex.domain.repository.PokemonRepository
 import com.angga.pokedex.domain.repository.PokemonTeamRepository
 import com.angga.pokedex.domain.utils.Result
 import com.angga.pokedex.presentation.bottom_nav.Destinations
+import com.angga.pokedex.presentation.widget.PokemonWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,9 +28,12 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    @ApplicationContext context: Context,
     private val pokemonRepository: PokemonRepository,
     private val pokemonTeamRepository: PokemonTeamRepository
 ) : ViewModel() {
+
+    private val pokemonWidgetRepository = PokemonWidgetRepository.get(context)
 
     var state by mutableStateOf(PokemonDetailState())
         private set
@@ -51,6 +57,7 @@ class PokemonDetailViewModel @Inject constructor(
     private fun addPokemonToTeam() {
         viewModelScope.launch {
             pokemonTeamRepository.inputPokemonToTeam(state.pokemon)
+            pokemonWidgetRepository.reload()
         }
     }
 
