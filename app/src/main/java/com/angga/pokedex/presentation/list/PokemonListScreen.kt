@@ -43,7 +43,7 @@ fun PokemonListScreen(
 //        navigateToDetailPage(1)
 //    }
     val result = pokemonViewModel.state.pokemonList.collectAsLazyPagingItems()
-    val loadState = result.loadState.mediator
+    val loadState = result.loadState
 
     LazyColumn(
         modifier = Modifier

@@ -1,12 +1,10 @@
 package com.angga.pokedex.data.repository
 
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.angga.pokedex.data.local.PokemonDatabase
-import com.angga.pokedex.data.pagination.PokemonRemoteMediator
 import com.angga.pokedex.data.remote.dto.PokemonCharacteristicDto
 import com.angga.pokedex.data.remote.dto.PokemonContentDto
 import com.angga.pokedex.data.remote.dto.toPokemon
@@ -28,14 +26,9 @@ class PokemonRepositoryImpl(
     private val httpClient: HttpClient,
     private val pokemonDatabase: PokemonDatabase
 ): PokemonRepository {
-    @OptIn(ExperimentalPagingApi::class)
     override suspend fun getPokemonList(): Flow<PagingData<Pokemon>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
-            remoteMediator = PokemonRemoteMediator(
-                httpClient = httpClient,
-                pokemonDatabase = pokemonDatabase
-            ),
+            config = PagingConfig(pageSize = 20),
             pagingSourceFactory = { pokemonDatabase.pokemonDao.getAllPokemon() }
         ).flow.map { pagingData ->
             pagingData.map {

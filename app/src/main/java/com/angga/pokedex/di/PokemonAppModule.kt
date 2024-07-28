@@ -9,6 +9,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -32,4 +35,9 @@ object PokemonAppModule {
     fun provideSharedPreferenceEditor(preferences: SharedPreferences) : SharedPreferences.Editor {
         return preferences.edit()
     }
+
+    @Provides
+    @Singleton
+    @ApplicationContext
+    fun provideApplicationScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 }

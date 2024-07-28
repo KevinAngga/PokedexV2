@@ -11,6 +11,9 @@ interface PokemonDao {
     @Upsert
     suspend fun addAllPokemon(pokemons: List<PokemonEntity>)
 
+    @Upsert
+    suspend fun addPokemon(pokemon: PokemonEntity)
+
     @Query("DELETE FROM `POKEMON_TABLE`")
     suspend fun deleteAllPokemon()
 
