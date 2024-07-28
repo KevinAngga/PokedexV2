@@ -1,4 +1,4 @@
-package com.angga.pokedex.data.remote.utils
+package com.angga.pokedex.data.local
 
 const val BASE_URL = "https://pokeapi.co/api/v2"
 const val POKEMON = "pokemon"
@@ -8,5 +8,4 @@ const val POKEMON_DATABASE = "pokemon_database"
 const val LIMIT = "limit"
 const val OFFSET = "offset"
 const val POKEMON_TEAM = "pokemon_team"
-const val POKEMON_TYPES = "pokemon_types"
-const val POKEMON_ABILITIES = "pokemon_abilities"
+const val POKEDEX_SHARED_PREFERENCES = "pokedex_shared_preference"

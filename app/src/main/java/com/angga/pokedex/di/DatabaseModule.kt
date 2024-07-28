@@ -2,7 +2,7 @@ package com.angga.pokedex.di
 
 import androidx.room.Room
 import com.angga.pokedex.data.local.PokemonDatabase
-import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
+import com.angga.pokedex.data.local.POKEMON_DATABASE
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 

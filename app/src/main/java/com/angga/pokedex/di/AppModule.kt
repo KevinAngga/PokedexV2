@@ -1,9 +1,5 @@
 package com.angga.pokedex.di
 
-import androidx.room.Room
-import com.angga.pokedex.data.local.PokemonDatabase
-import com.angga.pokedex.data.remote.HttpClientFactory
-import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
 import com.angga.pokedex.data.repository.PokemonRepositoryImpl
 import com.angga.pokedex.data.repository.PokemonTeamRepositoryImpl
 import com.angga.pokedex.domain.repository.PokemonRepository
@@ -14,8 +10,6 @@ import com.angga.pokedex.presentation.team.PokemonTeamsViewModel
 import com.angga.pokedex.presentation.widget.PokemonWidgetRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import org.koin.android.ext.koin.androidApplication
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

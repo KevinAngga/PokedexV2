@@ -11,12 +11,10 @@ import com.angga.pokedex.data.local.entity.PokemonRemoteKeysEntity
 import com.angga.pokedex.data.remote.dto.PokemonDto
 import com.angga.pokedex.data.remote.dto.PokemonListResponseDto
 import com.angga.pokedex.data.remote.dto.toPokemonEntity
-import com.angga.pokedex.data.remote.utils.LIMIT
-import com.angga.pokedex.data.remote.utils.OFFSET
-import com.angga.pokedex.data.remote.utils.POKEMON
+import com.angga.pokedex.data.local.LIMIT
+import com.angga.pokedex.data.local.OFFSET
+import com.angga.pokedex.data.local.POKEMON
 import com.angga.pokedex.data.remote.utils.get
-import com.angga.pokedex.domain.utils.DataError
-import com.angga.pokedex.domain.utils.Result
 import com.angga.pokedex.domain.utils.map
 import io.ktor.client.HttpClient
 import io.ktor.util.network.UnresolvedAddressException
@@ -24,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
-import retrofit2.HttpException
 
 @OptIn(ExperimentalPagingApi::class)
 class PokemonRemoteMediator(

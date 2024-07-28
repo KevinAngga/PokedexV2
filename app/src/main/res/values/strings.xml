@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Pokedex</string>
+    <string name="team_already_full">You can only have six Pokemon on Team</string>
+    <string name="device_storage_full">Your device storage are full</string>
+    <string name="success_add">%s, has been add to Team</string>
+    <string name="success_remove">%s, has been removed to Team</string>
+    <string name="abilities">Abilities</string>
+    <string name="habitat">Habitat</string>
+    <string name="characteristic">Characteristic</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="input_team_name">Input Desire Team Name</string>
 </resources>

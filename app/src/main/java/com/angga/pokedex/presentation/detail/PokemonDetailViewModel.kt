@@ -8,21 +8,25 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.angga.pokedex.R
 import com.angga.pokedex.domain.model.PokemonCharacteristic
 import com.angga.pokedex.domain.model.PokemonDesc
 import com.angga.pokedex.domain.repository.PokemonRepository
 import com.angga.pokedex.domain.repository.PokemonTeamRepository
+import com.angga.pokedex.domain.utils.DataError
 import com.angga.pokedex.domain.utils.Result
 import com.angga.pokedex.presentation.bottom_nav.Destinations
+import com.angga.pokedex.presentation.ui.UiText
 import com.angga.pokedex.presentation.widget.PokemonWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +45,12 @@ class PokemonDetailViewModel @Inject constructor(
     private val _pokemonId = MutableStateFlow(savedStateHandle.toRoute<Destinations.Detail>().pokemonId)
     val pokemonId = _pokemonId.asStateFlow()
 
+    private val _fromTeamPage = MutableStateFlow(savedStateHandle.toRoute<Destinations.Detail>().fromTeamPage)
+    val fromTeamPage = _fromTeamPage.asStateFlow()
+
+    private val eventChannel = Channel<PokemonDetailEvent>()
+    val events = eventChannel.receiveAsFlow()
+
     init {
         getPokemonDetail()
         getContent()
@@ -49,15 +59,57 @@ class PokemonDetailViewModel @Inject constructor(
     fun onAction(action: PokemonDetailAction) {
         when(action) {
             PokemonDetailAction.OnAddTeamClicked -> {
-                addPokemonToTeam()
+                if (fromTeamPage.value) {
+                    deletePokemonFromTeam()
+                } else {
+                    addPokemonToTeam()
+                }
             }
         }
     }
 
     private fun addPokemonToTeam() {
         viewModelScope.launch {
-            pokemonTeamRepository.inputPokemonToTeam(state.pokemon)
-            pokemonWidgetRepository.reload()
+            when(val insertToTeams = pokemonTeamRepository.inputPokemonToTeam(state.pokemon)) {
+                is Result.Failed -> {
+                    if (insertToTeams.error == DataError.Local.MAX_POKEMON_TEAM) {
+                        eventChannel.send(
+                            PokemonDetailEvent.Error(UiText.StringResource(R.string.team_already_full))
+                        )
+                    } else {
+                       eventChannel.send(
+                           PokemonDetailEvent.Error(UiText.StringResource(R.string.device_storage_full))
+                       )
+                    }
+                }
+
+                is Result.Success -> {
+                    eventChannel.send(
+                        PokemonDetailEvent.Error(UiText.StringResource(
+                            id = R.string.success_add,
+                            arrayOf(insertToTeams.data.replaceFirstChar { it.uppercase() })
+                        ))
+                    )
+                    pokemonWidgetRepository.reload()
+                }
+            }
+        }
+    }
+
+    private fun deletePokemonFromTeam() {
+        viewModelScope.launch {
+            when(val deletePokemon = pokemonTeamRepository.deletePokemonFromTeam(state.pokemon)) {
+                is Result.Failed -> {}
+                is Result.Success -> {
+                    eventChannel.send(
+                        PokemonDetailEvent.Error(UiText.StringResource(
+                            id = R.string.success_remove,
+                            arrayOf(deletePokemon.data.replaceFirstChar { it.uppercase() })
+                        ))
+                    )
+                    pokemonWidgetRepository.reload()
+                }
+            }
         }
     }
 
@@ -88,9 +140,7 @@ class PokemonDetailViewModel @Inject constructor(
                         habitat = data1.habitat,
                         characteristic = data2.characteristic
                     )
-                } else -> {
-                    Timber.e("== error lee")
-                }
+                } else -> {}
             }
         }
     }

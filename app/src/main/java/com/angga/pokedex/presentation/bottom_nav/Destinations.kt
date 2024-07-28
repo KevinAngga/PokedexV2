@@ -12,7 +12,8 @@ sealed class Destinations {
 
     @Serializable
     data class Detail(
-        val pokemonId: Int
+        val pokemonId: Int,
+        var fromTeamPage: Boolean = false
     )
 
     @Serializable

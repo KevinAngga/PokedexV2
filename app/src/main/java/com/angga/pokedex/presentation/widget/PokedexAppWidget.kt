@@ -1,34 +1,28 @@
 package com.angga.pokedex.presentation.widget
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Environment
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.action.Action
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.ImageProvider
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
-import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -38,12 +32,8 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import androidx.glance.text.Text
-import com.angga.pokedex.R
-import com.angga.pokedex.data.local.entity.PokemonTeamEntity
 import com.angga.pokedex.domain.model.PokemonTeam
-import com.angga.pokedex.presentation.components.PokemonText
-import com.angga.pokedex.presentation.team.PokemonTeamItem
-import java.io.File
+import com.angga.pokedex.presentation.MainActivity
 
 class PokedexAppWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -64,10 +54,10 @@ class PokedexAppWidget : GlanceAppWidget() {
         repository: PokemonWidgetRepository
     ) {
         val list = repository.loadModel().collectAsState(
-            initial = listOf(
-                PokemonTeam()
-            )
+            initial = listOf()
         ).value
+
+        val context = LocalContext.current
 
         Column(
             modifier = GlanceModifier
@@ -81,28 +71,41 @@ class PokedexAppWidget : GlanceAppWidget() {
                 itemsIndexed(
                     items = list,
                 ) { index, pokemon ->
-                    WidgetItem(pokemonTeam = pokemon)
+                    WidgetItem(
+                        pokemonTeam = pokemon,
+                        onClick = actionStartActivity(
+                            Intent(
+                                context.applicationContext,
+                                MainActivity::class.java)
+                                .setAction(Intent.ACTION_VIEW)
+                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        )
+                    )
                 }
             }
         }
     }
     
     @Composable
-    private fun WidgetItem(pokemonTeam: PokemonTeam) {
-
-        val pref = currentState<Preferences>()
+    private fun WidgetItem(
+        pokemonTeam: PokemonTeam,
+        onClick: Action
+    ) {
 
         val filePathString: String = remember {
             pokemonTeam.localPath
         }
+
         val bitmap = rememberImageBitmap(filePathString)
 
         Row(
-            modifier = GlanceModifier.fillMaxWidth()
-                .padding(vertical = 4.dp),
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .clickable(onClick),
             verticalAlignment = Alignment.Vertical.CenterVertically
         ) {
-            Image(provider = ImageProvider(bitmap), contentDescription = "home")
+            Image(provider = ImageProvider(bitmap), contentDescription = pokemonTeam.name)
             
             Spacer(modifier = GlanceModifier.width(4.dp))
             

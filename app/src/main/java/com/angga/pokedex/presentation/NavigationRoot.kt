@@ -20,8 +20,8 @@ fun NavigationRoot(
         startDestination = Destinations.BottomNavGraph
     ) {
         mainGraph(
-            navigateToDetail = {
-                navController.navigate(Destinations.Detail(it))
+            navigateToDetail = { pokemonId, fromTeamPage ->
+                navController.navigate(Destinations.Detail(pokemonId, fromTeamPage))
             }
         )
 
@@ -42,7 +42,7 @@ fun NavigationRoot(
 }
 
 private fun NavGraphBuilder.mainGraph(
-    navigateToDetail : (Int) -> Unit,
+    navigateToDetail : (Int, Boolean) -> Unit,
 ) {
     navigation<Destinations.BottomNavGraph>(
         startDestination = Destinations.Home
@@ -50,13 +50,17 @@ private fun NavGraphBuilder.mainGraph(
         composable<Destinations.Home> {
             PokemonListScreen(
                 navigateToDetailPage = {
-                    navigateToDetail(it)
+                    navigateToDetail(it, false)
                 }
             )
         }
 
         composable<Destinations.Team> {
-            PokemonTeamScreenRoot()
+            PokemonTeamScreenRoot(
+                navigateToDetailPage = {
+                    navigateToDetail(it, true)
+                }
+            )
         }
     }
 }

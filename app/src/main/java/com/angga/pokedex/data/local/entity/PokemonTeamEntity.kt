@@ -2,7 +2,7 @@ package com.angga.pokedex.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.angga.pokedex.data.remote.utils.POKEMON_TEAM
+import com.angga.pokedex.data.local.POKEMON_TEAM
 
 @Entity(tableName = POKEMON_TEAM)
 data class PokemonTeamEntity(

@@ -1,6 +1,7 @@
 package com.angga.pokedex.presentation.team
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +29,13 @@ import com.angga.pokedex.presentation.ui.theme.ShadowText
 @Composable
 fun PokemonTeamItem(
     index: Int,
-    pokemonTeam: PokemonTeam
+    pokemonTeam: PokemonTeam,
+    onClick :() -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier
@@ -81,7 +84,8 @@ fun PokemonTeamItemPreview() {
                 name = "bulbasaur",
                 type1 = "grass",
                 type2 = "poison"
-            )
+            ),
+            onClick = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.angga.pokedex.presentation.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +32,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,7 @@ import com.angga.pokedex.R
 import com.angga.pokedex.presentation.components.PokemonCircularText
 import com.angga.pokedex.presentation.components.PokemonText
 import com.angga.pokedex.presentation.list.calcDominantColor
+import com.angga.pokedex.presentation.ui.ObserveAsEvents
 import com.angga.pokedex.presentation.ui.theme.Archive
 import com.angga.pokedex.presentation.ui.theme.LineColor
 import com.angga.pokedex.presentation.ui.theme.NormalType
@@ -50,11 +54,26 @@ import com.angga.pokedex.presentation.ui.theme.ShadowText
 import com.angga.pokedex.presentation.utils.formatNumberWithLeadingZeros
 import com.angga.pokedex.presentation.utils.getHeightString
 import com.angga.pokedex.presentation.utils.getWeightString
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PokemonDetailScreenRoot() {
     val detailViewModel : PokemonDetailViewModel = hiltViewModel()
+    val context = LocalContext.current
+
+    ObserveAsEvents(flow = detailViewModel.events) { pokemonDetailEvent ->
+        when (pokemonDetailEvent) {
+            is PokemonDetailEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    pokemonDetailEvent.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is PokemonDetailEvent.SuccessAddPokemonToTeam -> {}
+            is PokemonDetailEvent.SuccessDeletedPokemonToTeam -> {}
+        }
+    }
+
     PokemonDetailScreen(
         state = detailViewModel.state,
         onAddTeamClicked = detailViewModel::onAction
@@ -222,7 +241,9 @@ fun PokemonDetailScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         PokemonText(
-                            text = "Weight",
+                            text = stringResource(
+                                id = R.string.weight
+                            ),
                             color = ShadowText
                         )
                     }
@@ -250,7 +271,9 @@ fun PokemonDetailScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         PokemonText(
-                            text = "Height",
+                            text = stringResource(
+                                id = R.string.height
+                            ),
                             color = ShadowText
                         )
                     }
@@ -298,7 +321,9 @@ fun PokemonDetailScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     PokemonText(
-                        text = "Abilities",
+                        text = stringResource(
+                            id = R.string.app_name
+                        ),
                         color = ShadowText
                     )
 
@@ -324,7 +349,9 @@ fun PokemonDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 PokemonText(
-                    text = "Habitat",
+                    text = stringResource(
+                        id = R.string.habitat
+                    ),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -337,7 +364,9 @@ fun PokemonDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 PokemonText(
-                    text = "Characteristic",
+                    text = stringResource(
+                        id = R.string.characteristic
+                    ),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

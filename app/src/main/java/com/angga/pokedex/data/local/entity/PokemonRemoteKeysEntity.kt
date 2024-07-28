@@ -2,7 +2,7 @@ package com.angga.pokedex.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.angga.pokedex.data.remote.utils.POKEMON_REMOTE_KEYS
+import com.angga.pokedex.data.local.POKEMON_REMOTE_KEYS
 
 @Entity(tableName = POKEMON_REMOTE_KEYS)
 data class PokemonRemoteKeysEntity(

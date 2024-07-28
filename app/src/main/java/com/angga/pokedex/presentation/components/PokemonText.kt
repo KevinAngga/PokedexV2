@@ -3,6 +3,7 @@ package com.angga.pokedex.presentation.components
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -15,6 +16,7 @@ import com.angga.pokedex.presentation.ui.theme.PokedexTheme
 
 @Composable
 fun PokemonText(
+    modifier: Modifier = Modifier,
     text : String,
     fontSize : TextUnit = 14.sp,
     fontFamily: FontFamily = InGlobal,
@@ -22,6 +24,7 @@ fun PokemonText(
     color : Color = MaterialTheme.colorScheme.onBackground
 ) {
     Text(
+        modifier = modifier,
         text = text,
         fontSize = fontSize,
         fontFamily = fontFamily,

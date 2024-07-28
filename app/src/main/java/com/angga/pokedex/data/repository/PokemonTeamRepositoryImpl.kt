@@ -1,21 +1,22 @@
 package com.angga.pokedex.data.repository
 
 import android.content.Context
+import android.database.sqlite.SQLiteFullException
 import com.angga.pokedex.data.local.PokemonDatabase
-import com.angga.pokedex.data.local.entity.PokemonEntity
-import com.angga.pokedex.data.local.entity.PokemonTeamEntity
 import com.angga.pokedex.data.remote.dto.toPokemonTeam
 import com.angga.pokedex.data.remote.dto.toPokemonTeamEntity
-import com.angga.pokedex.data.remote.utils.get
 import com.angga.pokedex.domain.model.Pokemon
 import com.angga.pokedex.domain.model.PokemonTeam
 import com.angga.pokedex.domain.repository.PokemonTeamRepository
+import com.angga.pokedex.domain.utils.DataError
+import com.angga.pokedex.domain.utils.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.readBytes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -26,22 +27,33 @@ class PokemonTeamRepositoryImpl(
     private val pokemonDatabase: PokemonDatabase,
     private val httpClient: HttpClient
 ) : PokemonTeamRepository {
-    override suspend fun inputPokemonToTeam(pokemon: Pokemon) {
-        withContext(Dispatchers.IO) {
-            val imagePath = async { getImageFromUrlAndSaveFiles(pokemon) }.await()
-            var pokemonEntity = pokemon.toPokemonTeamEntity()
+    override suspend fun inputPokemonToTeam(pokemon: Pokemon): Result<String, DataError.Local> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val currentTeamSize = getAllPokemonTeam().first().size
 
-            pokemonEntity = pokemonEntity.copy(
-                localPath = imagePath
-            )
+                if (currentTeamSize == 6) {
+                    return@withContext Result.Failed(DataError.Local.MAX_POKEMON_TEAM)
+                }
 
-            pokemonDatabase.pokemonTeamDao.addPokemonTeam(pokemonEntity)
+                val imagePath = async { getImageFromUrlAndSaveFiles(pokemon) }.await()
+                var pokemonEntity = pokemon.toPokemonTeamEntity()
+
+                pokemonEntity = pokemonEntity.copy(
+                    localPath = imagePath
+                )
+
+                pokemonDatabase.pokemonTeamDao.addPokemonTeam(pokemonEntity)
+                Result.Success(pokemonEntity.name)
+            }
+        } catch (e : SQLiteFullException) {
+            Result.Failed(DataError.Local.DISK_FULL)
         }
-
     }
 
-    override suspend fun deletePokemonFromTeam(pokemon: Pokemon) {
+    override suspend fun deletePokemonFromTeam(pokemon: Pokemon): Result<String, DataError.Local> {
         pokemonDatabase.pokemonTeamDao.deletePokemon(pokemon.toPokemonTeamEntity())
+        return Result.Success(pokemon.name)
     }
 
     override suspend fun getAllPokemonTeam(): Flow<List<PokemonTeam>> {

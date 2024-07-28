@@ -6,7 +6,7 @@ import com.angga.pokedex.data.local.PokemonDatabase
 import com.angga.pokedex.data.local.dao.PokemonDao
 import com.angga.pokedex.data.local.dao.PokemonRemoteKeysDao
 import com.angga.pokedex.data.local.dao.PokemonTeamDao
-import com.angga.pokedex.data.remote.utils.POKEMON_DATABASE
+import com.angga.pokedex.data.local.POKEMON_DATABASE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

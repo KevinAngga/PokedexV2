@@ -1,6 +1,7 @@
 package com.angga.pokedex.data.remote.utils
 
 
+import com.angga.pokedex.data.local.BASE_URL
 import com.angga.pokedex.domain.utils.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
