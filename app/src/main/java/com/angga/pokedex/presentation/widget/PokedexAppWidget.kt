@@ -64,10 +64,12 @@ class PokedexAppWidget : GlanceAppWidget() {
                 .fillMaxSize()
                 .padding(vertical = 8.dp)
                 .background(Color.White),
-            horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = GlanceModifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 itemsIndexed(
                     items = list,
                 ) { index, pokemon ->

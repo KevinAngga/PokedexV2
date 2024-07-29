@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.angga.pokedex.R
 import com.angga.pokedex.presentation.components.PokemonCircularText
+import com.angga.pokedex.presentation.components.PokemonDetailShimmer
 import com.angga.pokedex.presentation.components.PokemonText
 import com.angga.pokedex.presentation.list.calcDominantColor
 import com.angga.pokedex.presentation.ui.ObserveAsEvents
@@ -193,7 +194,7 @@ fun PokemonDetailScreen(
                         Row {
                             state.pokemon.types[0]?.let { PokemonCircularText(text = it) }
                             Spacer(modifier = Modifier.width(4.dp))
-                            state.pokemon.types[1]?.let { PokemonCircularText(text = it) }
+                            state.pokemon.types[1]?.let { if (it.isNotEmpty()) PokemonCircularText(text = it) }
                         }
                     }
 
@@ -322,7 +323,7 @@ fun PokemonDetailScreen(
 
                     PokemonText(
                         text = stringResource(
-                            id = R.string.app_name
+                            id = R.string.abilities
                         ),
                         color = ShadowText
                     )
@@ -339,44 +340,54 @@ fun PokemonDetailScreen(
 
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-
-                PokemonText(
-                    text = state.pokemonDesc,
-                    color = ShadowText
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                PokemonText(
-                    text = stringResource(
-                        id = R.string.habitat
-                    ),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                PokemonText(
-                    text = state.habitat,
-                    color = ShadowText
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                PokemonText(
-                    text = stringResource(
-                        id = R.string.characteristic
-                    ),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                PokemonText(
-                    text = state.characteristic,
-                    color = ShadowText
-                )
+                
+                if (state.isLoading) {
+                    PokemonDetailShimmer()
+                } else {
+                    PokemonHabitatAndCharacteristic(state = state)
+                }
             }
         }
+    }
+}
+
+@Composable
+fun PokemonHabitatAndCharacteristic(state: PokemonDetailState) {
+    Column {
+        PokemonText(
+            text = state.pokemonDesc,
+            color = ShadowText
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PokemonText(
+            text = stringResource(
+                id = R.string.habitat
+            ),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        PokemonText(
+            text = state.habitat,
+            color = ShadowText
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PokemonText(
+            text = stringResource(
+                id = R.string.characteristic
+            ),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        PokemonText(
+            text = state.characteristic,
+            color = ShadowText
+        )
     }
 }
 

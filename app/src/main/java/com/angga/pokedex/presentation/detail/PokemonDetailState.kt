@@ -17,7 +17,8 @@ data class PokemonDetailState(
             "chlorophyll"
         )
     ),
-    val pokemonDesc : String = "lorem ipsum",
-    val habitat : String = "habitat",
-    val characteristic : String = "char"
+    val pokemonDesc : String = "-",
+    val habitat : String = "-",
+    val characteristic : String = "-",
+    val isLoading : Boolean = false
 )

@@ -10,4 +10,6 @@
     <string name="weight">Weight</string>
     <string name="height">Height</string>
     <string name="input_team_name">Input Desire Team Name</string>
+    <string name="retry">Retry</string>
+    <string name="empty_team">You don\'t have any Pokemon on your team</string>
 </resources>

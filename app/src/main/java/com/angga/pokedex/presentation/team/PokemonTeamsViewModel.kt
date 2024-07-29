@@ -33,7 +33,6 @@ class PokemonTeamsViewModel @Inject constructor(
 
         viewModelScope.launch {
             snapshotFlow { state.textFieldState.text }
-                .collectLatest { input -> println("=== $input") }
         }
     }
 
@@ -67,11 +66,4 @@ class PokemonTeamsViewModel @Inject constructor(
             teamName = teamName
         )
     }
-
-    suspend fun getTeams(): Flow<List<PokemonTeam>> {
-        return pokemonTeamRepository.getAllPokemonTeam()
-    }
-
-
-
 }

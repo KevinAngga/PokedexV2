@@ -79,6 +79,12 @@ dependencies {
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
 
+    //lottie
+    implementation(libs.lottie)
+
+    //sharedelement
+    implementation(libs.androidx.compose.animation)
+
     //startup
     implementation(libs.startup.android)
 

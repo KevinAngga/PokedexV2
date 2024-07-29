@@ -125,6 +125,7 @@ class PokemonDetailViewModel @Inject constructor(
 
     private fun getContent() {
         viewModelScope.launch {
+            state = state.copy(isLoading = true)
             val responseContent = async { pokemonRepository.getPokemonContentDto(pokemonId.value) }
             val responseCharacteristic = async { pokemonRepository.getPokemonCharacteristic(pokemonId.value) }
 
@@ -136,6 +137,7 @@ class PokemonDetailViewModel @Inject constructor(
                     val data2 = characteristic.data as PokemonCharacteristic
 
                     state = state.copy(
+                        isLoading = false,
                         pokemonDesc = data1.desc,
                         habitat = data1.habitat,
                         characteristic = data2.characteristic
