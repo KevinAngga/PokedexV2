@@ -49,7 +49,6 @@ val GhostType = Color(0XFF6568ad)
 val GhostTypeBackground = Color(0XFF8474b3)
 
 val DarkType = Color(0XFF424348)
-val DarkTypeBackground = Color(0XFF768190)
 
 val SteelType = Color(0XFFa4a3b3)
 val SteelTypeBackground = Color(0XFFbebcd2)

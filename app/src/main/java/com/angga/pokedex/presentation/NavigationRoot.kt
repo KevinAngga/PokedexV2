@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.angga.pokedex.presentation.bottom_nav.Destinations
 import com.angga.pokedex.presentation.detail.PokemonDetailScreenRoot
@@ -27,7 +28,13 @@ fun NavigationRoot(
 
 
         /** use primitive **/
-        composable<Destinations.Detail> {
+        composable<Destinations.Detail>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "example://angga-pokedex/{pokemonId}/?fromTeamPage={fromTeamPage}"
+                }
+            )
+        ) {
             PokemonDetailScreenRoot()
         }
 

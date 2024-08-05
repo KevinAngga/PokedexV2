@@ -1,4 +1,4 @@
-package com.angga.pokedex.presentation.team
+package com.angga.pokedex.presentation.team.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

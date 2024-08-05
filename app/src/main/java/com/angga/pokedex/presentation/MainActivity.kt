@@ -117,24 +117,13 @@ class MainActivity : ComponentActivity() {
 private fun ComponentActivity.ChangeSystemBarsTheme(lightTheme: Boolean) {
     val barColor = Color.Transparent.toArgb()
     LaunchedEffect(lightTheme) {
-        if (lightTheme) {
-            enableEdgeToEdge(
-                statusBarStyle = SystemBarStyle.light(
-                    barColor, barColor,
-                ),
-                navigationBarStyle = SystemBarStyle.light(
-                    barColor, barColor,
-                ),
-            )
-        } else {
-            enableEdgeToEdge(
-                statusBarStyle = SystemBarStyle.dark(
-                    barColor,
-                ),
-                navigationBarStyle = SystemBarStyle.dark(
-                    barColor,
-                ),
-            )
-        }
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                barColor, barColor,
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                barColor, barColor,
+            ),
+        )
     }
 }

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.angga.pokedex.R
 import com.angga.pokedex.domain.model.PokemonTeam
 import com.angga.pokedex.presentation.components.PokemonText
+import com.angga.pokedex.presentation.team.components.ChangeTeamNameDialog
 import com.angga.pokedex.presentation.ui.theme.Archive
 import com.angga.pokedex.presentation.ui.theme.PokedexTheme
 import com.angga.pokedex.presentation.ui.theme.TeamBanner

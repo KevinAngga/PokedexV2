@@ -142,7 +142,11 @@ class PokemonDetailViewModel @Inject constructor(
                         habitat = data1.habitat,
                         characteristic = data2.characteristic
                     )
-                } else -> {}
+                } else -> {
+                    state = state.copy(
+                        isLoading = false
+                    )
+                }
             }
         }
     }

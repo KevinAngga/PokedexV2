@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -29,9 +30,12 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.text.Text
+import com.angga.pokedex.R
 import com.angga.pokedex.domain.model.PokemonTeam
 import com.angga.pokedex.presentation.MainActivity
 
@@ -57,32 +61,47 @@ class PokedexAppWidget : GlanceAppWidget() {
             initial = listOf()
         ).value
 
-        val context = LocalContext.current
-
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .padding(vertical = 8.dp)
                 .background(Color.White),
+            horizontalAlignment = Alignment.Horizontal.CenterHorizontally
         ) {
-            LazyColumn(
+
+            Image(
                 modifier = GlanceModifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                itemsIndexed(
-                    items = list,
-                ) { index, pokemon ->
-                    WidgetItem(
-                        pokemonTeam = pokemon,
-                        onClick = actionStartActivity(
-                            Intent(
-                                context.applicationContext,
-                                MainActivity::class.java)
-                                .setAction(Intent.ACTION_VIEW)
-                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    .size(60.dp, 24.dp),
+                provider = ImageProvider(R.drawable.ic_pokemon),
+                contentDescription = "widget_logo"
+            )
+
+            Spacer(
+                modifier = GlanceModifier.height(8.dp)
+            )
+
+            if (list.isEmpty()) {
+                Text(text = "Empty")
+            } else {
+                LazyColumn(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    itemsIndexed(
+                        items = list,
+                    ) { index, pokemon ->
+                        WidgetItem(
+                            pokemonTeam = pokemon,
+                            onClick = actionStartActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("example://angga-pokedex/${pokemon.id}/?fromTeamPage=true"))
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
