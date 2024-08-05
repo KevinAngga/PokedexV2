@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -40,15 +42,18 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
@@ -68,12 +73,32 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     ksp(libs.dagger.hilt.compiler)
+    ksp(libs.androidx.hilt.work)
+
+    //workmanager
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+
+    //lottie
+    implementation(libs.lottie)
+
+    //sharedelement
+    implementation(libs.androidx.compose.animation)
+
+    //startup
+    implementation(libs.startup.android)
 
     //koin
     implementation(libs.bundles.koin)
 
     //ktor
     implementation(libs.bundles.ktor)
+
+    //coil
+    implementation(libs.coil)
+
+    //pallet
+    implementation(libs.pallet)
 
     //room
     implementation(libs.room)
@@ -93,6 +118,13 @@ dependencies {
     //paging
     implementation(libs.paging.compose)
     implementation(libs.paging.runtime)
+
+    //timber
+    implementation(libs.timber)
+
+    //glace
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.widget)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
